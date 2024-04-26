@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+// schema.prisma
+
+// Definição do modelo para a tabela 'usuarios'
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String
+  senha     String
+  telefone  Int
+  is_banido Boolean @default(true)
+  desaparecidos Desaparecido[]
+ 
+}
+
+// Definição do modelo para a tabela 'desaparecidos'
+model Desaparecido {
+  id                Int      @id @default(autoincrement())
+  nome_desaparecido String
+  nome_social       String
+  idade             Int
+  foto              Int
+  genero            String
+  caracteristica    String
+  visto_por_ultimo  DateTime
+  historia          String
+  regiao            String
+  esta_desaparecido Boolean  @default(true)
+  usuario_id        Int
+  usuario           Usuario @relation(fields: [usuario_id], references: [id])
+  contato   Contato[]
+}
+
+
+model Contato{
+  id       Int      @id @default(autoincrement())
+  telefone  Int
+  desaparecido_id Int
+  desaparecido Desaparecido @relation(fields: [desaparecido_id], references: [id])
+}
+
